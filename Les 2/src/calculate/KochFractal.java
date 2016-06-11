@@ -4,12 +4,13 @@
  */
 package calculate;
 
+import java.util.List;
 import java.util.Observable;
 import javafx.scene.paint.Color;
 
 /**
  *
- * @author Peter Boots
+ * @author Robin de Kort / Mario Schipper
  */
 public class KochFractal extends Observable {
 
@@ -22,7 +23,7 @@ public class KochFractal extends Observable {
         if (!cancelled) {
             if (n == 1) {
                 hue = hue + 1.0f / nrOfEdges;
-                Edge e = new Edge(ax, ay, bx, by, Color.hsb(hue*360.0, 1.0, 1.0));
+                Edge e = new Edge(ax, ay, bx, by, Color.hsb(hue * 360.0, 1.0, 1.0));
                 this.setChanged();
                 this.notifyObservers(e);
             } else {
@@ -40,24 +41,28 @@ public class KochFractal extends Observable {
         }
     }
 
-    public void generateLeftEdge() {
+    public void generateLeftEdge(List<Edge> edges) {
         hue = 0f;
         cancelled = false;
         drawKochEdge(0.5, 0.0, (1 - Math.sqrt(3.0) / 2.0) / 2, 0.75, level);
     }
 
-    public void generateBottomEdge() {
+    public void generateBottomEdge(List<Edge> edges) {
         hue = 1f / 3f;
         cancelled = false;
         drawKochEdge((1 - Math.sqrt(3.0) / 2.0) / 2, 0.75, (1 + Math.sqrt(3.0) / 2.0) / 2, 0.75, level);
     }
 
-    public void generateRightEdge() {
+    public void generateRightEdge(List<Edge> edges) {
         hue = 2f / 3f;
         cancelled = false;
         drawKochEdge((1 + Math.sqrt(3.0) / 2.0) / 2, 0.75, 0.5, 0.0, level);
     }
-    
+
+    public boolean isCancelled() {
+        return cancelled;
+    }
+
     public void cancel() {
         cancelled = true;
     }

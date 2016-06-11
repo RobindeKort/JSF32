@@ -9,6 +9,7 @@ import calculate.KochFractal;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import static jsf32kochfractalterminal.FileType.*;
 
 /**
  *
@@ -22,7 +23,7 @@ public class JSF32KochFractalTerminal {
     public static void main(String[] args) throws InterruptedException {
         Scanner sc = new Scanner(System.in);
         int level = 0;
-        while (level <= 0) {
+        while (level <= 0 || level > 12) {
             System.out.print("KochFractal level: ");
             String input = sc.nextLine();
             // Sleep because otherwise the output gets messed up for some reason
@@ -35,8 +36,25 @@ public class JSF32KochFractalTerminal {
                 System.out.println("Invalid input");
             }
         }
-
-        KochFractal kf = new KochFractal();
-        kf.setLevel(level);
+		FileType type;
+		while (true) {
+			System.out.print("Write as (b)inary or (t)ext: ");
+            String input = sc.nextLine();
+            // Sleep because otherwise the output gets messed up for some reason
+            // Probably because of the VM
+            Thread.sleep(1);
+			if (input.trim().toLowerCase().equals("b")){
+				type = BINARY;
+				break;
+			} else if (input.trim().toLowerCase().equals("t")) {
+				type = TEXT;
+				break;
+			} else {
+				System.out.println("Invalid input");
+			}
+		}
+		
+		KochManager manager = new KochManager(type);
+		manager.changeLevel(level);
     }
 }
