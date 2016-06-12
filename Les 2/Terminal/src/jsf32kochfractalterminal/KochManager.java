@@ -53,7 +53,6 @@ public class KochManager implements Observer {
 		runRight = null;
 		runBottom = null;
 		finishedThreadCount = 0;
-		setFile("edges.edg");
 		this.type = type;
 	}
 
@@ -104,6 +103,7 @@ public class KochManager implements Observer {
 	}
 	
 	private void saveEdgesBinary() {
+		setFile("edges.bedg");
 		OutputStream out;
         try {
             out = new FileOutputStream(outFile, false);
@@ -132,6 +132,7 @@ public class KochManager implements Observer {
 	}
 	
 	private void saveEdgesText() {
+		setFile("edges.tedg");
 		PrintWriter out = null;
 		try {
 			out = new PrintWriter(outFile, "UTF-8");
@@ -143,7 +144,7 @@ public class KochManager implements Observer {
 		
 		out.println(kochLevel);
 		for (Edge e : edgeList) {
-			String edgeString = String.format("%1$s,%2$s,%3$s,%4$s,%5$s,%6$s,%7$s", e.X1, e.Y1, e.X2, e.Y2, e.color.getHue(), e.color.getSaturation(), e.color.getBrightness());
+			String edgeString = String.format("%1$s %2$s %3$s %4$s %5$s %6$s %7$s", e.X1, e.Y1, e.X2, e.Y2, e.color.getHue(), e.color.getSaturation(), e.color.getBrightness());
 //			System.out.println(edgeString);
 			out.println(edgeString);
 		}

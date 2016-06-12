@@ -15,7 +15,7 @@ import static jsf32kochfractalterminal.FileType.*;
  *
  * @author root
  */
-public class JSF32KochFractalTerminal {
+public class KochFractalTerminal {
 
     /**
      * @param args the command line arguments
