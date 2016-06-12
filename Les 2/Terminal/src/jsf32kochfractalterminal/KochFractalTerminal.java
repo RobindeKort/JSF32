@@ -5,7 +5,6 @@
  */
 package jsf32kochfractalterminal;
 
-import calculate.KochFractal;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -13,7 +12,7 @@ import static jsf32kochfractalterminal.FileType.*;
 
 /**
  *
- * @author root
+ * @author Robin, Mario
  */
 public class KochFractalTerminal {
 
@@ -22,6 +21,7 @@ public class KochFractalTerminal {
      */
     public static void main(String[] args) throws InterruptedException {
         Scanner sc = new Scanner(System.in);
+		
         int level = 0;
         while (level <= 0 || level > 12) {
             System.out.print("KochFractal level: ");
@@ -36,6 +36,7 @@ public class KochFractalTerminal {
                 System.out.println("Invalid input");
             }
         }
+		
 		FileType type;
 		while (true) {
 			System.out.print("Write as (b)inary or (t)ext: ");
@@ -48,6 +49,27 @@ public class KochFractalTerminal {
 				break;
 			} else if (input.trim().toLowerCase().equals("t")) {
 				type = TEXT;
+				break;
+			} else {
+				System.out.println("Invalid input");
+			}
+		}
+		
+		while (true) {
+			System.out.print("Write (b)uffered or (n)on-buffered: ");
+            String input = sc.nextLine();
+            // Sleep because otherwise the output gets messed up for some reason
+            // Probably because of the VM
+            Thread.sleep(1);
+			if (input.trim().toLowerCase().equals("b")){
+				if (type == BINARY) {
+					type = BINARYBUFFERED;
+					break;
+				} else {
+					type = TEXTBUFFERED;
+					break;
+				}
+			} else if (input.trim().toLowerCase().equals("n")) {
 				break;
 			} else {
 				System.out.println("Invalid input");

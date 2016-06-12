@@ -106,7 +106,7 @@ public class KochFractalFX extends Application {
         labelLevel = new Label("Level: " + currentLevel);
         grid.add(labelLevel, 0, 6);
         
-        // Button to increase level of Koch fractal
+        // Button to load a file non buffered
         Button buttonOpenFile = new Button();
         buttonOpenFile.setText("Open File");
         buttonOpenFile.setOnAction(new EventHandler<ActionEvent>() {
@@ -126,6 +126,27 @@ public class KochFractalFX extends Application {
             }
         });
         grid.add(buttonOpenFile, 3, 6);
+		
+		// Button to load a file buffered
+        Button buttonOpenFileBuffered = new Button();
+        buttonOpenFileBuffered.setText("Open File Buffered");
+        buttonOpenFileBuffered.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+				FileChooser chooser = new FileChooser();
+				chooser.setTitle("Open edg file");
+				chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("edg files","*.bedg","*.tedg"));
+				File result = chooser.showOpenDialog(primaryStage);
+				if (result == null) return;
+				
+				if (result.getName().endsWith(".bedg")) {
+					kochManager.loadBinaryBuffered(result);
+				} else if (result.getName().endsWith(".tedg")) {
+					kochManager.loadTextBuffered(result);
+				}
+            }
+        });
+        grid.add(buttonOpenFileBuffered, 5, 6);
         
         // Button to fit Koch fractal in Koch panel
         Button buttonFitFractal = new Button();

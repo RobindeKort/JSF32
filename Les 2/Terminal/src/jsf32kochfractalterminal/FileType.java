@@ -11,5 +11,7 @@ package jsf32kochfractalterminal;
  */
 public enum FileType {
 	TEXT,
-	BINARY
+	BINARY,
+	TEXTBUFFERED,
+	BINARYBUFFERED
 }
