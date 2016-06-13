@@ -6,9 +6,7 @@
 package jsf32kochfractalfx;
 
 import calculate.Edge;
-import java.io.DataInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -27,8 +25,6 @@ import timeutil.TimeStamp;
  * @author Robin de Kort / Mario Schipper
  */
 public class KochManager {
-	
-    private static final int NUMBER_OF_BYTES = 10*1024*1024; //10 MB of data
 
 	// The JavaFX application
 	private KochFractalFX application;
@@ -50,9 +46,12 @@ public class KochManager {
 					final TimeStamp ts = new TimeStamp();
 					ts.setBegin("Start loading Bin");
 					RandomAccessFile raf = new RandomAccessFile(file, "rw");
-					MappedByteBuffer mbb = raf.getChannel().map(FileChannel.MapMode.READ_WRITE, 0, NUMBER_OF_BYTES);
-                    final int level = mbb.getInt();
+					// Only read the level which is an int (int=4 bytes)
+					final int level = raf.getChannel().map(FileChannel.MapMode.READ_ONLY, 0, 4).getInt();
                     final int nrOfEdges = (int) (3 * Math.pow(4, level - 1));
+					// 8 bytes per double per edge (has 7 doubles)
+					int NUMBER_OF_BYTES = nrOfEdges*7*8;
+					MappedByteBuffer mbb = raf.getChannel().map(FileChannel.MapMode.READ_ONLY, 4, NUMBER_OF_BYTES);
                     Platform.runLater(new Runnable() {
 						@Override
 						public void run() {

@@ -29,7 +29,7 @@ import timeutil.TimeStamp;
  */
 public class KochManager implements Observer {
 	
-    private static final int NUMBER_OF_BYTES = 10*1024*1024; //10 MB of data
+    private int NUMBER_OF_BYTES;
 
 	private List<Edge> edgeList;
 
@@ -72,10 +72,13 @@ public class KochManager implements Observer {
 		}
 	}
 
-	public void changeLevel(final int nxt) {
+	public void changeLevel(final int level) {
+		// 4 bytes per int (level) and 8 bytes per double per edge (has 7 doubles)
+		NUMBER_OF_BYTES = (int) (4 + ((3 * Math.pow(4, level - 1))*7*8));
+		
 		pool.shutdownNow();
 		pool = Executors.newFixedThreadPool(3);
-		kochLevel = nxt;
+		kochLevel = level;
 		finishedThreadCount = 0;
 
 		timeStamp = new TimeStamp();
