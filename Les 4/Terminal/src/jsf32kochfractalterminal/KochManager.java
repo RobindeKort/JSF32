@@ -28,8 +28,8 @@ import timeutil.TimeStamp;
  * @author Robin de Kort / Mario Schipper
  */
 public class KochManager implements Observer {
-	
-    private int NUMBER_OF_BYTES;
+
+	private int NUMBER_OF_BYTES;
 
 	private List<Edge> edgeList;
 
@@ -55,8 +55,11 @@ public class KochManager implements Observer {
 
 	private boolean setFile(String filename) {
 		try {
-			outFile = new File(filename);
-			if (!outFile.exists() && !outFile.createNewFile()) {
+			outFile = new File(System.getProperty("user.home"), filename);
+			if (outFile.exists()) {
+				outFile.delete();
+			}
+			if (!outFile.createNewFile()) {
 				outFile = null;
 				return false;
 			}
@@ -74,8 +77,8 @@ public class KochManager implements Observer {
 
 	public void changeLevel(final int level) {
 		// 4 bytes per int (level) and 8 bytes per double per edge (has 7 doubles)
-		NUMBER_OF_BYTES = (int) (4 + ((3 * Math.pow(4, level - 1))*7*8));
-		
+		NUMBER_OF_BYTES = (int) (4 + ((3 * Math.pow(4, level - 1)) * 7 * 8));
+
 		pool.shutdownNow();
 		pool = Executors.newFixedThreadPool(3);
 		kochLevel = level;
@@ -101,7 +104,7 @@ public class KochManager implements Observer {
 		finishedThreadCount++;
 		System.out.println("Threads finished: " + finishedThreadCount);
 	}
-	
+
 	private void saveEdgesBinary() {
 		setFile("edges.bedg");
 		RandomAccessFile raf = null;
@@ -114,9 +117,9 @@ public class KochManager implements Observer {
 		} catch (IOException ioe) {
 			Logger.getLogger(KochManager.class.getName()).log(Level.SEVERE, null, ioe);
 		}
-		
-        try {
-            mbb.putInt(kochLevel);
+
+		try {
+			mbb.putInt(kochLevel);
 			for (Edge e : edgeList) {
 				mbb.putDouble(e.X1);
 				mbb.putDouble(e.Y1);
@@ -127,9 +130,9 @@ public class KochManager implements Observer {
 				mbb.putDouble(e.color.getBrightness());
 			}
 			raf.close();
-        } catch (IOException ex) {
-            Logger.getLogger(KochManager.class.getName()).log(Level.SEVERE, null, ex);
-        }
+		} catch (IOException ex) {
+			Logger.getLogger(KochManager.class.getName()).log(Level.SEVERE, null, ex);
+		}
 	}
 
 	@Override
@@ -139,14 +142,23 @@ public class KochManager implements Observer {
 		if (finishedThreadCount >= 3) {
 			timeStamp.setEnd("Stop calculating");
 			System.out.println(timeStamp.toString());
-			
+
 			TimeStamp ts = new TimeStamp();
 			ts.setBegin("Start writing binary");
 			saveEdgesBinary();
 			ts.setEnd("Stop writing binary");
 			System.out.println(ts.toString());
-			
+
 			pool.shutdown();
+
+			// Without the GarbageCollector, the MappedByteBuffer won't close and
+			// that will block us from renaming the file. 
+			File newFile = new File(System.getProperty("user.home"), "finishedEdges.bedg");
+			if (newFile.exists()) {
+				newFile.delete();
+			}
+			System.gc();
+			outFile.renameTo(newFile);
 		}
 	}
 
