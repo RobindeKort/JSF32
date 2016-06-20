@@ -90,6 +90,7 @@ public class KochManager implements Observer {
 	
 	public void stop() {
 		try {
+			printWriter.println("bye");
 			serverListener.stopListening();
 			listenerThread.interrupt();
 			printWriter.close();

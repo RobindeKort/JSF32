@@ -54,10 +54,8 @@ public class ServerRunnable implements Runnable {
 						System.out.println("Changing level");
 						kochManager.changeLevel(level);
 					} else {
-//						kochManager.loadEdgesBinary();
+						kochManager.loadEdgesBinary();
 					}
-				} else if (instr.equals("zoom")) {
-					//TODO
 				} else if (instr.equals("bye")) {
 					kochManager.stop();
 					break;

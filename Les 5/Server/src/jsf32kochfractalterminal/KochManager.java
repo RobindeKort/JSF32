@@ -130,6 +130,7 @@ public class KochManager implements Observer {
 			for (int i = 0; i < NUMBER_OF_EDGES * 7; i++) {
 				oos.writeDouble(mbb.getDouble());
 			}
+			oos.flush();
 			fc.close();
 			raf.close();
 		} catch (IOException ex) {
@@ -138,8 +139,6 @@ public class KochManager implements Observer {
 	}
 
 	private void saveEdgesBinary() {
-		timeStamp.setEnd("Stop calculating");
-		System.out.println(timeStamp.toString());
 		TimeStamp ts = new TimeStamp();
 		ts.setBegin("Start writing binary");
 
@@ -207,7 +206,7 @@ public class KochManager implements Observer {
 					Logger.getLogger(KochManager.class.getName()).log(Level.SEVERE, null, ex);
 				}
 			}
-//			saveEdgesBinary();
+			saveEdgesBinary();
 			System.gc();
 			System.out.format("Sent %1$s edges for level %2$s\n", edgeList.size(), kochLevel);
 		}
